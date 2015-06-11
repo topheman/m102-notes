@@ -59,4 +59,107 @@ Locks = Shared resources
 	* One writers comes in : locks all readers + any other writers
 * Metadata :
 	* Indexes : multiple documents sharing an index -> updating one or an other would involve the update of the index causing conflict
-	* Journal : 
+	* Journal
+
+###WiredTiger
+
+####Features
+
+* Document-level locking
+* Compression
+* Lacks some pitfalls of MMAPv1
+* Performance gains
+
+* Already used by other DBs
+* Open Source
+
+`mongod --storageEngine wiredTiger`
+
+*If launched on data already managed by MMAPv1, will fail*
+
+####Internals
+
+* Stores Data in Btrees
+* During update, writes a new version of document instead of overwriting existing one
+* Two caches
+	* WiredTiger Cache (1/2 of RAM by default)
+	* File System Cache
+	* How it works : each 60seconds happens a "checkpoint" (each one is a consistent snapshot of the data) :
+		* Data goes from Wired Tiger Cache
+		* To the File System Cache
+		* To the disk
+	* Upside
+		* Each checkpoint is a consistent snapshot of the data, so the db won't be corrupted
+		* Cause of this, could use no journaling
+	* Downside
+		* If no journal, could loose data which was not writent to the disk between checkpoint when the server failed
+* Document-level locking
+	* No locks but good concurency protocols
+	* Writes scale with number of threads
+* Compression : Since WT has its own cache, and since data in WT cache doesn't have to be the same as in the File System cache or on disk, it can have compression. Options :
+	* Snappy (default) - fast
+	* zlib - more compression
+	* none
+
+###Indexes
+
+`db.collectionName.createIndex({a:1})`
+
+Indexes have an order : 1 or -1 (forwards or backwards)
+
+Following are different (two fields index = compound index) :
+
+* `db.collectionName.createIndex({a:1,b:1})`
+* `db.collectionName.createIndex({a:-1,b:-1})`
+* `db.collectionName.createIndex({b:1,a:1})`
+* `db.collectionName.createIndex({b:-1,a:-1})`
+
+Can't do : `db.collectionName.createIndex({a:1,b:-1})` - indexes have **only one direction**
+
+* Duplicate key allowed on indexes (not on _id)
+
+####Notes
+
+* Indexes can be any type
+* `_id`
+	* automatically created
+	* unique to the collection
+	* immutable, no change through time
+* `db.collectionName.ensureIndex()` [is now deprecated in v3](http://docs.mongodb.org/manual/reference/method/db.collection.ensureIndex/)
+* Indexes are automatically used when working a query
+* Array content can be indexed (multikeys) : `{likes:["tennis","golf"]}`
+* Nested fields or entire subdocuments can be indexed
+* Fieldnames are not in the index
+
+####Unique Indexes
+
+`db.collectionName.createIndex({a:1},{unique:true})`
+
+It won't be possible to insert two documents not containing the "a" attribute (will cause duplicate key error because evaluated to `null`)
+
+####Sparse Indexes
+
+If an attribute is used rarely but you want to index it, use sparse so that :
+
+* it won't create an index for all the times this attribute is not present
+* if an index is unique AND sparse, 2 documents not including the field indexed **can exist** in the same collection
+
+####TTL Indexes
+
+[doc](http://docs.mongodb.org/manual/core/index-ttl/)
+
+`db.eventlog.createIndex( { "lastModifiedDate": 1 }, { expireAfterSeconds: 3600 } )`
+
+* Only on **Date** (or Array of Date) attributes
+* The document will be deleted after the amount of seconds specified
+
+####Geospatial Indexes
+
+`db.places.createIndex( { loc: "2dsphere" } )` : creates the index.
+
+`db.places.find( { loc: { $near: { $geometry: { type: "Point", coordinates: [2,2.01], spherical: true } } } } )` : will output documents ordered by distance to this point
+
+[More queries - doc](http://docs.mongodb.org/manual/reference/operator/query-geospatial/)
+
+standard Based on [GeoJson](http://geojson.org/)
+
