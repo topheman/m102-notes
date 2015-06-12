@@ -133,7 +133,7 @@ Can't do : `db.collectionName.createIndex({a:1,b:-1})` - indexes have **only one
 
 ####Unique Indexes
 
-`db.collectionName.createIndex({a:1},{unique:true})`
+`db.collectionName.createIndex( { a:1 }, { unique: true } )`
 
 It won't be possible to insert two documents not containing the "a" attribute (will cause duplicate key error because evaluated to `null`)
 
@@ -162,4 +162,129 @@ If an attribute is used rarely but you want to index it, use sparse so that :
 [More queries - doc](http://docs.mongodb.org/manual/reference/operator/query-geospatial/)
 
 standard Based on [GeoJson](http://geojson.org/)
+
+####Text Indexes
+
+`db.sentences.createIndex( { words: "text" } )`
+
+A collection can have at most **one text** index.
+
+* non-case sensitive
+* manages plurals
+* words order in query doesn't matter (like OR operator)
+* retrieve a score on the query and sort by pertinance
+* language can be changed
+
+Simple text query :
+
+`db.sentences.find( { $text: { $search: "Trees cat" } } )`
+
+Query, without showing _id and ordered by pertinance (score) :
+
+`db.sentences.find( { $text: { $search: "Trees cat" } }, { score: { $meta: "textScore"}, _id: 0 } ).sort( { score: { $meta: "textScore" } } )`
+
+####Background Index Creation
+
+[doc](http://docs.mongodb.org/manual/tutorial/build-indexes-in-the-background/)
+
+`db.collectionName.createIndex( { a:1 }, { background: true } )`:
+
+* read and writes can continue will index is building (on the primary )
+* on secondaries, indexes are not built in the background
+	* any queries to the collection will block
+* slower than foreground (may take time)
+* foreground *packs more* (due to BTree algorithm optimizations)
+* doing it in foreground : you know exactly when finished (even if it doesn't block read/writes on primary)
+
+####Drop Duplicates
+
+`db.collectionName.createIndex( { a:1 }, { unique: true, dropDups: true } )`
+
+###Performance
+
+Usefull to test indexes : `for (i=0; i<100; i++) { for(j=0; j<100; j++) { x = []; for(k=0; k<100; k++) x.push({a:i,b:j,c:k, _id: (10000*i + 100*j +k)}); db.example.insert(x); }  }`
+
+####Explain Plans
+
+* See which indexes are used
+* Looks at the following queries :
+	* aggregate
+	* find
+	* count
+	* remove (won't remove)
+	* update (won't update)
+	* group
+
+`db.example.explain().find( { a:1 } ).sort( { b: -1 } )`
+
+In `queryPlanner.winningPlan` (don't confuse with possible `queryPlanner.rejectedPlan`), with an index:
+
+* `"stage": "IXSCAN"`: means an index was used
+* `"indexName": "a_1_b_1"`: which index was used
+* `"direction": "backward"`
+
+In `queryPlanner.winningPlan`, without index:
+
+* `"stage": "COLLSCAN"`: means an index was used
+
+#####queryPlanner vs executionStats
+
+* queryPlanner : default explain
+* executionStats : more infos, such as :
+	* time to execute
+	* number of documents returned
+	* documents examined
+
+`db.example.explain("executionStats").find( { a:1 } ).sort( { b: -1 } )`
+
+```
+var exp = db.example.explain("executionStats");
+exp.find( { a:1 } ).sort( { b: -1 } )
+```
+
+#####allPlansExecution
+
+`var exp = db.example.explain("allPlansExecution");`
+
+Will give you the stats for all execution plans.
+
+* The `winningPlan` is the one returning documents (other plans may not return documents because they were overuled by the winning plan, which is the one which will be used in production)
+* doesn't include COLLSCAN (if index is present, it **will be used**)
+
+**Drop unused indexes**
+
+####Covered Queries
+
+* Queries that can be answered without looking at documents
+* Just uses the index
+
+Use case : You retrieve exactly the same fields that are indexed (and where used in the query).
+
+####Recap
+
+* more indexes
+	* faster reads
+	* slower writes
+* faster to build an index post-import than pre-import
+
+###Ops
+
+####currentOp() & killOp()
+
+* `db.currentOp()`
+* `db.killOp(opId)`
+
+Which ops are safe to kill ? :
+
+* a query **safe**
+* a findAndModify **safe** (usually write operations on primary are safe)
+* a foreground create index building on a primary **safe**
+* a foreground create index building on a secondary **unsafe** (primary and secondary won't be in sync)
+* a compact command job **unsafe** 
+
+Summup - care killing :
+
+* write ups to secondaries
+* compact
+* internal ops
 
