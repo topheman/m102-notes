@@ -161,14 +161,4 @@ Each operations has an id and can be killed with `db.killOp(opId)`.
 * index
 	* ensureIndex
 	* dropIndex
-	
----
-
-Homework 2.2
-
-`db.products.update({_id : ObjectId("507d95d5719dbef170f15c00")},{$set:{term_years:3,"limits.sms.over_rate":0.01}})`
-
-Homework 2.3
-
-`db.products.count({"limits.voice":{$exists:true}})`
 

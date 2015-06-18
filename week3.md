@@ -288,3 +288,31 @@ Summup - care killing :
 * compact
 * internal ops
 
+###Profiler
+
+`db.setProfilingLevel(level)`
+
+level :
+
+* 0 : off
+* 1 : selective (slow ones)
+* 2 : on
+
+Any infos will be stored in `system.profile` collection of the db.
+
+* No indexes on it (faster, no need because more writes than reads)
+* `capped` collection that only takes 1MB by default in RAM
+
+`db.system.profile.find().sort( { $natural: -1 } ).limit(1).pretty()`: will return the last operation profiled.
+
+Shortcuts :
+
+* `show profile`: will show the last op that was slow
+* `db.getProfilingStatus()`
+* `db.setProfilingLevel(1,3)`: so that it will only capture ops taking more than 3 ms
+
+###mongostat & mongotop
+
+`mongostat --port 27017`
+
+`mongotop --port 27017`
