@@ -49,11 +49,12 @@ new Syntax (since mongo 3.x.x):
 `db.collectionName.update(whereClause, updateDocument, [options])`
 
 options:
+
 ```
 upsert: true/false,
 multi: true/false,
 writeConcern: document
-``
+```
 
 By default :
 
