@@ -16,7 +16,7 @@ This repo contains my general notes, taken on the fly while watching the video c
 
 #Summary
 
-* Week 1
-* Week 2
-* Week 3
-* Week 4
+* [Week 1 - Concepts](https://github.com/topheman/m102-notes/blob/master/week1.md)
+* [Week 2 - CRUD](https://github.com/topheman/m102-notes/blob/master/week2.md)
+* [Week 3 - Storage Engine](https://github.com/topheman/m102-notes/blob/master/week3.md)
+* [Week 4 - Replication](https://github.com/topheman/m102-notes/blob/master/week2.md)
