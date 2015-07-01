@@ -68,7 +68,7 @@ Multiple `mongos` :
 * 4 `mongos` processes
 * 3 config servers
 
-[`run.sh` file](#run shards on a single dev machine - more on https://github.com/topheman/m102-notes/blob/master/run_shards.sh)
+[`run.sh` file](https://github.com/topheman/m102-notes/blob/master/run_shards.sh)
 
 To run it :
 
