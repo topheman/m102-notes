@@ -70,6 +70,8 @@ Multiple `mongos` :
 
 [`run.sh` file](https://github.com/topheman/m102-notes/blob/master/run_shards.sh)
 
+**Warning** : Change the location "imac-tophe.local" to your machine.
+
 To run it :
 
 ```shell
@@ -84,5 +86,155 @@ Best practices :
 * run `mongos` on the standard mongodb tcp port 27017
 * do **not** run shard servers or `mongod`s nor config servers on that port
 
-###The Config Database
+####The Config Database
 
+Connect to the `mongos` and show the config (will retrieve it from the config server via the `mongos`).
+Running `mongo` connects to the default `mongos` (on port 27017).
+
+```
+mongo
+use config
+show collections
+```
+
+####Adding initital Shards
+
+For each shard :
+
+1. Inititate replicaSet
+2. *add* the shard `rs.addShard(...)`
+
+To retrieve the port of one of the `mongod` of a replicaSet of our demo : `ps -A | grep 2700`
+
+```
+mongo --port 27000
+rs.status()
+rs.initiate()
+rs.add('imac-tophe.local:27001')
+rs.add('imac-tophe.local:27002')
+rs.conf()
+rs.status()
+```
+
+Connect to the `mongos` and add the replica as a shard with `sh.addShard(server:port OR replicaSetName/server:port)`
+
+**Warn** : The server name might have a different case, since it hase been `rs.initiate()` without any config. Check the exact server name by connecting to the `mongod`and `rs.status()`.
+
+```
+mongo
+sh.addShard('a/imac-tophe.local:27000')
+sh.status()
+```
+
+To automate : use the [`our_setup_script.js` file](https://github.com/topheman/m102-notes/blob/master/our_setup_script.js) - replace the `imac-tophe.local`refs by yours.
+
+```
+mongo --shell our_setup_script.js
+ourAddShard('b',27100)
+sh.status()
+ourAddShard('c',27200)
+sh.status()
+ourAddShard('d',27300)
+sh.status()
+```
+
+At this point, the shards are all added.
+
+####Enable Sharding for a Collection
+
+* collections aren't sharded by default
+* to specify shard keys, you need to connect to a `mongos`
+
+1. Enable sharding on the db : `sh.enableSharding(dbName)`
+	* ex: `sh.enableSharding("week6")`
+	* `sh.status()` : `"partitioned" : true` means sharding is enabled
+2. Enable sharding on the collection : `sh.shardCollection(fullName, key, unique)`
+	* ex: `sh.shardCollection("week6.foo", { _id: 1 }, true )`
+
+####Working on a Sharded Cluster
+
+Prepare data - [`working_with_a_sharded_cluster.js` file](https://github.com/topheman/m102-notes/blob/master/working_with_a_sharded_cluster.js)
+
+```
+mongo working_with_a_sharded_cluster.js --shell
+```
+
+Wait for the ~1million docs to be inserted.
+
+`db.example.getIndexes()`: an index on b,c,d fields which is the shard key (`sh.status()`)
+
+* inserting a new document which doesn't contain the whole shard key will fail
+* adding a new index will create it on all the other primaries
+
+Query and importance of the shard key:
+
+* targetted query: uses the shard (or at least part of it - prefix way), able to hit only a specific shard
+* scatter gather query: doesn't use the shard key, will hit all shards (without necessary retrieving any data from them)
+
+###Cardinality & Monotonic Shard Keys
+
+####Shard Key Selection
+
+* the shard key should be common in queries for the collections
+* good "cardinality" / "granularity"
+* is the key monotonically increasing ?
+	* like timestamp / autoincrement / ObjectId in _id field - yes ? don't pick this field
+	* use UUID
+
+####Examples
+
+Orders collection with the following fields :
+
+* _id
+* company
+* items : []
+* date
+* total
+
+Possible shardKeys :
+
+* _id : good cardinality, used in query, bad monotonic
+* company : bad cardinality
+* compound shardKeys :
+	* company, _id : if query only on _id, useless
+	* company, date : great for query, great for spinning accross shards
+
+###Process and Machine Layout
+
+* shard servers : `mongod --shardsvr`
+* config servers : `mongod --configsvr`
+* `mongos` processes
+
+Use cases with 32 machines / RF (Replication Factor) = 3
+
+* 10 shards * 3 (RF) = 30 machines with a `mongod` running, part of a replicaSet
+	* 3 config servers on any of those machines (not large load)
+		* don't use shard 1 (might be used more than others)
+	* `mongos` : different options :
+		* one on each client machine
+		* one on each of the two spare machine (2 `mongos` won't be enough for a cluster that large)
+		* one on each member of the cluster :
+			* clients will connect to any `mongos`
+* 8 shards * 2 (RF) = 16 machines with a `mongod` running, part of a replicaSet
+	* *never have even number of member* : add arbiter
+		* add an arbiter on shards, for each replicaSet, not located on the same shard
+	* `mongos` running on each machine
+	* 3 config servers each ones, located on different machines
+* Very large cluster
+	* dedicated machines for `mongod`, config, `mongos`
+	* spare servers (when machines go down)
+
+###Bulk Inserts & Pre-splitting
+
+Generally, Pre-splitting shouldn't be necessary, even with non uniform key distributions - the database handles the split / migrate.
+
+###Further Tips & Best Practices
+
+* only shard the big collections (don't bother with smaller ones)
+* pick shard key with care, they aren't easily changeable
+* pre-split if bulk loading
+* be cognizant of monotonically increasing shard keys (timestamp / ObjectId ...)
+* adding a shard is easy but takes time
+* use logical server names for config servers
+* don't directly talk to anything except mongos except for dba work
+* keep non-mongos processes off of 27017 to avoid mistakes
