@@ -21,6 +21,5 @@ This repo contains my general notes, taken on the fly while watching the video c
 * [Week 3 - Storage Engine](https://github.com/topheman/m102-notes/blob/master/week3.md)
 * [Week 4 - Replication - part 1](https://github.com/topheman/m102-notes/blob/master/week4.md)
 * [Week 5 - Replication - part 2](https://github.com/topheman/m102-notes/blob/master/week5.md)
-* [Week 5 - Replication - part 2](https://github.com/topheman/m102-notes/blob/master/week5.md)
 * [Week 6 - Scalability](https://github.com/topheman/m102-notes/blob/master/week6.md)
 * [Week 7 - Backup and Recovery](https://github.com/topheman/m102-notes/blob/master/week7.md)
