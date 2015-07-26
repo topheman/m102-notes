@@ -1,4 +1,4 @@
-![MongoDB University](http://dev.topheman.com/wp-content/uploads/2013/12/mongodb-university-logo.png =360x)
+<img src="http://dev.topheman.com/wp-content/uploads/2013/12/mongodb-university-logo.png" width="360" />
 
 M102 - General notes
 ====================
@@ -23,6 +23,6 @@ This repo contains my general notes, taken on the fly while watching the video c
 * [Week 6 - Scalability](https://github.com/topheman/m102-notes/blob/master/week6.md)
 * [Week 7 - Backup and Recovery](https://github.com/topheman/m102-notes/blob/master/week7.md)
 
-[![Read blog post](http://dev.topheman.com/wp-content/uploads/2015/07/M102-certificate-apercu.png =425x)](http://dev.topheman.com/m102-mongodb-for-dbas-completed)
+<a href="http://dev.topheman.com/m102-mongodb-for-dbas-completed" title="Read blog post"><img src="http://dev.topheman.com/wp-content/uploads/2015/07/M102-certificate-apercu.png" width="425"/></a>
 
 *NB: No answers to any homeworks or final exam included.*
