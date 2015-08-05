@@ -159,7 +159,7 @@ It is said :
 
 ####Projection
 
-Second param of `find` or `findOne` like methods
+Second param of `find` or `findOne` are field selectors (like methods)
 
 * `{name:1}`: will show _id and name fields
 * `{name:1, _id:0}`: will show only name fields
