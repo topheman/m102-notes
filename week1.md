@@ -107,6 +107,17 @@ Flexibility
 * iteration / agile
 * data representation / polymorphic
 
+## MongoDB shell
+
+* Connects always to database 'test' on default
+
+###Launch the database :
+
+```shell
+$ mkdir data
+$ mongod  [--nojournal] --dbpath data
+```
+
 ##Mongoimport
 
 ###Launch the database :
