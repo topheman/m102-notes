@@ -136,7 +136,7 @@ It is said :
 
 ###Import
 
-`mongoimport --db pcat --collection products < homework/week1/homework_1_2/products.json`
+`mongoimport [--stopOnError] --db pcat --collection products < homework/week1/homework_1_2/products.json`
 
 ###Cursors introduction
 
