@@ -127,7 +127,7 @@ $ mkdir data
 $ mongod --dbpath data
 ```
 
-Take a look at the data to import : `cat homework_1_2/products.json` : **No trailing commas ?!!** WTF, it isn't valid JSON ...
+Take a look at the data to import : `cat homework/week1/homework_1_2/products.json` : **No trailing commas ?!!** WTF, it isn't valid JSON ...
 
 It is said :
 
@@ -136,7 +136,7 @@ It is said :
 
 ###Import
 
-`mongoimport --db pcat --collection products < homework_1_2/products.json`
+`mongoimport --db pcat --collection products < homework/week1/homework_1_2/products.json`
 
 ###Cursors introduction
 
