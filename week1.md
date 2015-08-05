@@ -140,6 +140,7 @@ It is said :
 
 * Databases and collections are automatically created
 * Database files (in the dbpath) has max. 2GB size, automatically created new one
+* "_id" will be added automatically to each document, if not specified
 
 ###Cursors introduction
 
