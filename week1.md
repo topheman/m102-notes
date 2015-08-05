@@ -100,6 +100,8 @@ There are utilities to directly manage BSON (such as mongoimport).
 
 ##Dynamic Schema
 
+We DO scheme design, accurate called 'dynamic schema'. MongoDb is more like a dynamically typed system, types resolved at runtime.
+
 Flexibility
 
 * iteration / agile
