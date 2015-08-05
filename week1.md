@@ -138,6 +138,9 @@ It is said :
 
 `mongoimport [--stopOnError] --db pcat --collection products < homework/week1/homework_1_2/products.json`
 
+* Databases and collections are automatically created
+* Database files (in the dbpath) has max. 2GB size, automatically created new one
+
 ###Cursors introduction
 
 * `db.products.find()` : in the repl, retrieves results ten by ten
