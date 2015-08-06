@@ -170,6 +170,8 @@ Second param of `find` or `findOne` are field selectors (like methods)
 
 * fields can vary
 * datatypes can vary
+* no 'alter table'
+* reduces the cases where database scheme migrations are needed
 
 Why use different fields ?
 
