@@ -187,6 +187,7 @@ Why use different fields ?
   * see http://docs.mongodb.org/manual/reference/operator/
 * nested documents can be queried with the dot notation
   * find( {"y.k.bbb":"hello"} )
+* $-operators and dot-notation needs to be quoted
 
 ####Sorting
 
