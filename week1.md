@@ -178,6 +178,16 @@ Why use different fields ?
 * polymorphism
 * agile / iterative
 
+#### Queries
+
+* field selectors of projections can also compare with special mongo operator
+  * `{ price:{$gte:200} }
+  * see http://docs.mongodb.org/manual/reference/operator/query/
+* more operators
+  * see http://docs.mongodb.org/manual/reference/operator/
+* nested documents can be queried with the dot notation
+  * find( {"y.k.bbb":"hello"} )
+
 ####Sorting
 
 `db.collectionName.find(...).sort(params)`
