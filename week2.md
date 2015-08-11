@@ -19,6 +19,19 @@ Write error management : see later :
 
 ###Update
 
+defining the values starting with the session:
+
+```shell
+> use pcat
+switched to db pcat
+> pcat = db
+pcat
+> t = pcat.test
+pcat.test
+> t
+pcat.test
+```
+
 * Signature : `db.collectionName.update(whereClause, documentOrPartialUpdate [, upsert [, multi]])`
 * Two kinds of updates :
     - Full document update
