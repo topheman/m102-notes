@@ -32,6 +32,16 @@ pcat.test
 pcat.test
 ```
 
+```shell
+> t.insert({x:"hello"})
+WriteResult({ "nInserted" : 1 })
+> db.test.insert({x:"hello"})
+WriteResult({ "nInserted" : 1 })
+> t.find()
+{ "_id" : ObjectId("55c92353b243a932f014774e"), "x" : "hello" }
+{ "_id" : ObjectId("55c92368b243a932f014774f"), "x" : "hello" }
+```
+
 * Signature : `db.collectionName.update(whereClause, documentOrPartialUpdate [, upsert [, multi]])`
 * Two kinds of updates :
     - Full document update
