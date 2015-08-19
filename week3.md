@@ -265,7 +265,7 @@ Use case : You retrieve exactly the same fields that are indexed (and where used
 * more indexes
 	* faster reads
 	* slower writes
-* faster to build an index post-import than pre-import
+* **faster** to build an index **post-import than pre-import**
 
 ###Ops
 
