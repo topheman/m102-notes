@@ -232,7 +232,7 @@ Generally, Pre-splitting shouldn't be necessary, even with non uniform key distr
 
 * only shard the big collections (don't bother with smaller ones)
 * pick shard key with care, they aren't easily changeable (create new collection and copy data over)
-* pre-split if bulk loading
+* consider pre-split if bulk loading
 * be cognizant of monotonically increasing shard keys (timestamp / ObjectId ...)
 * adding a shard is easy but takes time
 * use logical server names for config servers
