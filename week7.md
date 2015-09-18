@@ -197,6 +197,8 @@ Utility : `mongofiles`
 * [bug database / Feature](https://jira.mongodb.org/)
 * support forums
 	* [mongodb-user / google groups](https://groups.google.com/forum/#!forum/mongodb-user)
+* IRC Chat and Support (irc://irc.freenode.net/#mongodb)
+* [github.com](https://github.com/mongodb/mongo)
 * [blog.mongodb.org](http://blog.mongodb.org/)
 * [@mongodb](https://twitter.com/mongodb)
 * [MMS](https://www.mongodb.com/cloud)
