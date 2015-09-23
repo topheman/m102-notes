@@ -186,3 +186,15 @@ Each operations has an id and can be killed with `db.killOp(opId)`.
 	* ensureIndex
 	* dropIndex
 
+## Usefull Links
+[Kill all long running MongoDB queries at once](http://cacodaemon.de/index.php?id=65)
+```
+(function (sec) {db.currentOp()['inprog'].forEach(function (query) { 
+    if (query.op !== 'query') { return; } 
+    if (query.secs_running < sec) { return; }  
+
+    print(['Killing query:', query.opid, 
+           'which was running:', query.secs_running, 'sec.'].join(' '));
+    db.killOp(query.opid);
+})})(120 /*The maximum execution time!*/);
+```
