@@ -181,12 +181,12 @@ Why use different fields ?
 #### Queries
 
 * field selectors of projections can also compare with special mongo operator
-  * `{ price:{$gte:200} }
+  * `{ price:{$gte:200} }`
   * see http://docs.mongodb.org/manual/reference/operator/query/
 * more operators
   * see http://docs.mongodb.org/manual/reference/operator/
 * nested documents can be queried with the dot notation
-  * find( {"y.k.bbb":"hello"} )
+  * `find( {"y.k.bbb":"hello"} )`
 * $-operators and dot-notation needs to be quoted
 
 ####Sorting

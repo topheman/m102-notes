@@ -19,29 +19,6 @@ Write error management : see later :
 
 ###Update
 
-defining the values starting with the session:
-
-```shell
-> use pcat
-switched to db pcat
-> pcat = db
-pcat
-> t = pcat.test
-pcat.test
-> t
-pcat.test
-```
-
-```shell
-> t.insert({x:"hello"})
-WriteResult({ "nInserted" : 1 })
-> db.test.insert({x:"hello"})
-WriteResult({ "nInserted" : 1 })
-> t.find()
-{ "_id" : ObjectId("55c92353b243a932f014774e"), "x" : "hello" }
-{ "_id" : ObjectId("55c92368b243a932f014774f"), "x" : "hello" }
-```
-
 * Signature : `db.collectionName.update(whereClause, documentOrPartialUpdate [, upsert [, multi]])`
 * Two kinds of updates :
     - Full document update
@@ -188,7 +165,8 @@ Each operations has an id and can be killed with `db.killOp(opId)`.
 
 ## Usefull Links
 [Kill all long running MongoDB queries at once](http://cacodaemon.de/index.php?id=65)
-```
+
+```js
 (function (sec) {db.currentOp()['inprog'].forEach(function (query) { 
     if (query.op !== 'query') { return; } 
     if (query.secs_running < sec) { return; }  
