@@ -27,3 +27,12 @@ This repo contains my general notes, taken on the fly while watching the video c
 * [Week 7 - Backup and Recovery](https://github.com/topheman/m102-notes/blob/master/week7.md)
 
 <a href="http://dev.topheman.com/m102-mongodb-for-dbas-completed" title="Read blog post"><img src="http://dev.topheman.com/wp-content/uploads/2015/07/M102-certificate-apercu.png" width="425"/></a>
+
+#Contributing
+
+You're welcome to contribute to this repo, by submitting a pull-request or sharing your fork for cherry-picking.
+
+##Contributors
+
+* Christophe Rosset [@topheman](https://github.com/topheman) (maintainer)
+* [@waja](https://github.com/waja)
