@@ -111,20 +111,13 @@ Flexibility
 
 * Connects always to database 'test' on default
 
-###Launch the database :
-
-```shell
-$ mkdir data
-$ mongod  [--nojournal] --dbpath data
-```
-
 ##Mongoimport
 
 ###Launch the database :
 
 ```shell
 $ mkdir data
-$ mongod --dbpath data
+$ mongod [--nojournal] --dbpath data
 ```
 
 Take a look at the data to import : `cat homework/week1/homework_1_2/products.json` : **No trailing commas ?!!** WTF, it isn't valid JSON ...
